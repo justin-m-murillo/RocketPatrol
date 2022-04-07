@@ -8,6 +8,8 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
+        // load spritesheet
+        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
 
     }
 
@@ -43,13 +45,16 @@ class Play extends Phaser.Scene {
 
         // check collisions
         if (this.checkCollision(this.p1Rocket, this.ship03)) {
-            console.log('kaboom ship 03');
+            this.p1Rocket.reset();
+            this.ship03.reset();
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            console.log('kaboom ship 02');
+            this.p1Rocket.reset();
+            this.ship02.reset();
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            console.log('kaboom ship 01');
+            this.p1Rocket.reset();
+            this.ship01.reset();
         }
     }
 
