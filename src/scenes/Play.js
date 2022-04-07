@@ -1,3 +1,5 @@
+//const { Phaser } = require("../../lib/phaser");
+
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
@@ -54,16 +56,30 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig); // score game object
+        // GAME OVER flag
+        this.gameOver = false;
+        // 60-second play clock
+        scoreConfig.fixedWidth = 0;
+        this.clock = this.time.delayedCall(10000, () => {
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart', scoreConfig).setOrigin(0.5);
+            this.gameOver = true;
+        }, null, this);
     }
 
     update() {
-        this.starfield.tilePositionX -= 4; // moving starfield backdrop
-        this.p1Rocket.update(); // update rocket
-        this.ship01.update(); // update spaceship (x3)
-        this.ship02.update();
-        this.ship03.update();
-
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+            this.scene.restart();
+        }
+        // while timer has not expired, allow player input
+        if (!this.gameOver) {
+            this.starfield.tilePositionX -= 4; // moving starfield backdrop
+            this.p1Rocket.update(); // update rocket
+            this.ship01.update(); // update spaceship (x3)
+            this.ship02.update();
+            this.ship03.update();
+        }
         // check collisions
         if (this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
